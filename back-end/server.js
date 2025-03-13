@@ -10,10 +10,24 @@ const PORT =  process.env.PORT || 5000;
 console.log(process.env.PORT)
 app.use(express.json());
 
-//test
+//signup
 
-app.get('/', (req,res)=>{
-    res.send("hello 22");
+app.post("api/signup",async(req, res)=>{
+
+    const{username, email,password} = req.body;
+
+    try {
+        if(!username || !password || !email){
+            throw new Error("All fields are required");
+        }
+
+        // const emailExists =
+    } catch (error) {
+
+        
+        
+    }
+
 })
 
 app.listen(PORT, async ()=>{
