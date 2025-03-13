@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import { connectTODB } from './config/db.js';
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.get('/', (req,res)=>{
     res.send("hello 22");
 })
 
-app.listen(PORT, ()=>{
+app.listen(PORT, async ()=>{
+    await connectTODB()
     console.log(`Server running port: ${PORT}`);
 })
