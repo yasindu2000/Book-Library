@@ -4,12 +4,14 @@ import Homepage from "./pages/Homepage"
 import AddBook from "./pages/AddBook"
 import LoginPage from "./pages/LoginPage"
 import SignupPage from "./pages/SignupPage"
+import {Toaster} from 'react-hot-toast'
 
 function App() {
   
 
   return (
     <>
+    <Toaster/>
       <Navbar/>
 
       <Routes>

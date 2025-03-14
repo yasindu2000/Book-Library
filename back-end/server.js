@@ -4,10 +4,12 @@ import { connectTODB } from "./config/db.js";
 import bcryptjs from "bcryptjs";
 import User from "./models/user.model.js";
 import jwt from "jsonwebtoken";
+import cors from "cors";
 
 dotenv.config();
 
 const app = express();
+app.use(cors());
 
 const PORT = process.env.PORT || 5000;
 console.log(process.env.PORT);
@@ -15,7 +17,7 @@ app.use(express.json());
 
 //signup
 
-app.post("api/signup", async (req, res) => {
+app.post("/api/signup", async (req, res) => {
   const { username, email, password } = req.body;
 
   try {
