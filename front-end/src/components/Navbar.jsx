@@ -1,7 +1,13 @@
 import { Link } from "react-router"
+import { useAuthStore } from "../store/authStore"
 
 
 function Navbar() {
+
+  const {user} = useAuthStore();
+
+  console.log("user :" ,user)
+
   return (
     
   <nav className="bg-[#252422] flex justify-between text-[#FFFCF2] items-center px-4 md:px-12 py-4 md:py-6">
