@@ -9,7 +9,12 @@ import cors from "cors";
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173", 
+    credentials: true,
+  })
+);
 
 const PORT = process.env.PORT || 5000;
 console.log(process.env.PORT);
@@ -66,6 +71,55 @@ app.post("/api/signup", async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 });
+
+app.post("/api/login", async (req, res)=>{
+
+  const {email, password} = req.body;
+
+  try {
+
+    const userDoc = await User.findOne({email});
+
+    if(!userDoc){
+      return res.status(400).json({
+        message: "Invalid credentials"
+      })
+    }
+
+    const isPasswordValid = await bcryptjs.compareSync(
+      password,
+      userDoc.password
+    )
+
+    if(!isPasswordValid){
+
+      return res.status(400).json({
+        message:"invalid credentials"
+      })
+    }
+    
+    //jwt
+
+    if (userDoc) {
+      const token = jwt.sign({ id: userDoc._id }, process.env.JWT_SECRET, {
+        expiresIn: "7d",
+      });
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 7*24*60*60*1000,
+      })
+    }
+
+    return res
+    .status(200)
+    .json({ user: userDoc, message: "Logged in successfully" });
+} catch (error) {
+  res.status(400).json({ message: error.message });
+}
+
+})
 
 app.listen(PORT, async () => {
   await connectTODB();
