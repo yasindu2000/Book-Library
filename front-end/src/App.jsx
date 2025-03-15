@@ -9,6 +9,7 @@ import { useAuthStore } from "./store/authStore";
 import { useEffect } from "react";
 import RedirectAuthenticatedUsers from "./providers/RedirectAuthenticatedUsers";
 import RedirectUnauthenticatedUser from "./providers/RedirectUnauthenticatedUser";
+import Footer from "./components/Footer";
 
 function App() {
   const { fetchUser, fetchingUser } = useAuthStore();
@@ -46,6 +47,7 @@ function App() {
           }
         ></Route>
       </Routes>
+      <Footer/>
     </>
   );
 }

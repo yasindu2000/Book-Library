@@ -125,46 +125,38 @@ app.post("/api/login", async (req, res)=>{
 
 //Fetch user
 
-app.get("/api/fetch-user",async(req, res) =>{
-
-  const {token} = req.cookies;
-
-if(!token){
-
-  return res.status(401).json({ message: "No Token provided"});
-}
-
-try {
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-  if(!decoded){
-    return res.status(401).json({
-      message: "Invalid token"
-    })
-  }
-  const userDoc = await User.findById(decoded.id).select("password");
-  
-  if(!userDoc){
-
-    return res.status(400).json({message: "user not found"})
+app.get("/api/fetch-user", async (req, res) => {
+  const { token } = req.cookies;
+  if (!token) {
+    return res.status(401).json({ message: "No token provided." });
   }
 
-  res.status(200).json({user: userDoc})
-} catch (error) {
-  
-  res.status(400).json({ message: error.message})
-}
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+    if (!decoded) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
 
-})
+    const userDoc = await User.findById(decoded.id).select("-password"); // Find all fields except the password
 
-app.post("/api/logout", async (req, res)=>{
+    if (!userDoc) {
+      return res.status(400).json({ message: "User not found." });
+    }
 
+    res.status(200).json({
+      user: userDoc,
+    });
+  } catch (error) {
+    console.log("Error in fetching user", error);
+    res.status(400).json({ message: error.message });
+  }
+});
+
+app.post("/api/logout", async (req, res) => {
   res.clearCookie("token");
-  res.status(200).json({
-    message: "Logged out successfully"
-  })
-})
+  res.status(200).json({ message: "Logged out successfully." });
+});
 
 
 app.listen(PORT, async () => {
