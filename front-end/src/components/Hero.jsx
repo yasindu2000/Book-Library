@@ -13,7 +13,7 @@ function Hero() {
         <div className="w-full h-full flex flex-col justify-center items-center z-50">
 
            <h1 className="text-3xl md:text-4xl lg:text-6xl pb-8 lg:pb-12 text-center max-w-5xl -mt-20">
-            Share your <span className='text-[#EB5E28]'>favourite</span> books and discover new ones from readers like you</h1>
+            Share your <span className='text-[#EB5E28]'>favourite</span> books and <span className='text-[#EB5E28]'>discover</span> new ones from readers like you</h1>
         </div>
     </div>
   )

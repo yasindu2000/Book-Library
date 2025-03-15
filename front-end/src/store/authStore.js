@@ -1,7 +1,9 @@
 import { create } from "zustand";
 import axios from "axios";
 
-const API_URL = "https://localhost:5000/api";
+const API_URL = "http://localhost:5000/api";
+
+
 axios.defaults.withCredentials = true;
 
 export const useAuthStore = create((set) => ({
@@ -37,12 +39,12 @@ export const useAuthStore = create((set) => ({
     }
   },
 
-  login: async (username, password) => {
+  login: async (email, password) => {
     set({ isLoading: true, message: null, error: null });
 
     try {
       const response = await axios.post(`${API_URL}/login`, {
-        username,
+        email,
         password,
       });
 
@@ -70,6 +72,7 @@ export const useAuthStore = create((set) => ({
     try {
       const response = await axios.get(`${API_URL}/fetch-user`);
 
+
       set({ user: response.data.user, fetchingUser: false });
     } catch (error) {
       set({
@@ -84,23 +87,24 @@ export const useAuthStore = create((set) => ({
   logout: async () => {
     set({ isLoading: true, error: null, message: null });
     try {
-      const response = await axios.post(`${API_URL}/logout`);
-
-      const { message } = response.data;
+      const response = await axios.post(`${API_URL}/logout`); // Make sure the URL is correct
+  
       set({
-        message,
+        message: response.data.message,
         isLoading: false,
-        user: null,
+        user: null, // Clear the user data
         error: null,
       });
-      return { message };
+  
+      return { message: response.data.message };
     } catch (error) {
       set({
-        error: error.response.data.message || "Error logging out",
+        error: error.response?.data?.message || "Error logging out",
         isLoading: false,
       });
-
+  
       throw error;
     }
   },
+  
 }));
