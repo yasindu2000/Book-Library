@@ -6,8 +6,15 @@ import User from "./models/user.model.js";
 import jwt from "jsonwebtoken";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import {v2 as cloudinary} from "cloudinary"
 
 dotenv.config();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+})
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -169,6 +176,26 @@ app.post("/api/logout", (req, res) => {
   res.status(200).json({ message: "Logged out successfully" });
 });
 
+
+// ------------------------------------------------------------------------------------------------------
+
+app.post("/api/add-book", async (req, res)=>{
+
+  const { image, title, subtitle, author, link, review } = req.body;
+  const {token} = req.cookies;
+  if(!token){
+
+    return res.status(401).json({ message: "No token provided"});
+  }
+try {
+
+
+  
+} catch (error) {
+  
+}
+
+})
 
 app.listen(PORT, async () => {
   await connectTODB();

@@ -28,8 +28,8 @@ function App() {
       <Navbar />
 
       <Routes>
-        <Route path={"/"} element={<Homepage />}></Route>
-        <Route path={"/add-book"} element={<RedirectUnauthenticatedUser><AddBook /></RedirectUnauthenticatedUser>}></Route>
+        <Route path={"/"} element={<Homepage/>}></Route>
+        <Route path={"/add-book"} element={<RedirectUnauthenticatedUser><AddBook/></RedirectUnauthenticatedUser>}></Route>
         <Route
           path={"/login"}
           element={
