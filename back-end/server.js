@@ -5,6 +5,7 @@ import bcryptjs from "bcryptjs";
 import User from "./models/user.model.js";
 import jwt from "jsonwebtoken";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(
 const PORT = process.env.PORT || 5000;
 console.log(process.env.PORT);
 app.use(express.json());
+app.use(cookieParser())
 
 //signup
 
@@ -123,7 +125,7 @@ app.post("/api/login", async (req, res)=>{
 
 //Fetch user
 
-app.get(PORT,async(req, res) =>{
+app.get("/api/fetch-user",async(req, res) =>{
 
   const {token} = req.cookies;
 
@@ -155,6 +157,15 @@ try {
 
 
 })
+
+app.post("/api/logout", async (req, res)=>{
+
+  res.clearCookie("token");
+  res.status(200).json({
+    message: "Logged out successfully"
+  })
+})
+
 
 app.listen(PORT, async () => {
   await connectTODB();
