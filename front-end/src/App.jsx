@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import RedirectAuthenticatedUsers from "./providers/RedirectAuthenticatedUsers";
 import RedirectUnauthenticatedUser from "./providers/RedirectUnauthenticatedUser";
 import Footer from "./components/Footer";
+import Searchpage from "./pages/Searchpage";
 
 function App() {
   const { fetchUser, fetchingUser } = useAuthStore();
@@ -46,6 +47,8 @@ function App() {
             </RedirectAuthenticatedUsers>
           }
         ></Route>
+
+        <Route path="/search" element={<Searchpage/>}/>
       </Routes>
       <Footer/>
     </>

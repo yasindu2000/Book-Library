@@ -237,6 +237,22 @@ app.get("/api/fetch-books", async (req, res) => {
 });
 
 
+app.get("/api/search", async (req, res) => {
+  try {
+    const searchTerm = req.query.searchTerm || "";
+    console.log("Search: ", searchTerm);
+    const books = await Book.find({
+      title: { $regex: searchTerm, $options: "i" },
+    }).sort({ createdAt: -1 });
+
+    return res.status(200).json({ books });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+
+
 app.listen(PORT, async () => {
   await connectTODB();
   console.log(`Server running on port: ${PORT}`);
