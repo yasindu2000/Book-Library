@@ -10,11 +10,23 @@ const [author, setAuthor] = useState("");
 const [link, setLink] = useState("");
 const [review, setReview] = useState("");
 
+const handleImageChange = (e)=>{
+
+  const file = e.target.files[0]
+  let reader = new FileReader()
+
+  reader.readAsDataURL(file);
+  reader.onloadend = function(){
+
+    setImage(reader.result)
+  }
+}
+
 const handleSubmit = (e) =>{
 
   e.preventDefault();
 
-  console.log(title, subtitle, author, link, review);
+  console.log(image, title, subtitle, author, link, review);
 }
 
 
@@ -39,6 +51,7 @@ const handleSubmit = (e) =>{
           <input
             type="file"
             accept="image/*"
+            onChange={handleImageChange}
             className="w-full px-3 py-1.5 md:py-2 text-[#252422] rounde-lg bg-white border-gray-500"
           />
         </div>

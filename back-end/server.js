@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import {v2 as cloudinary} from "cloudinary"
+import Book from "./models/book.model.js";
 
 dotenv.config();
 
@@ -189,9 +190,37 @@ app.post("/api/add-book", async (req, res)=>{
   }
 try {
 
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+  if(!decoded){
+
+    return res.status(401).json({message:"Invalid token"})
+
+  }
 
   
+
+const imageResponse = await cloudinary.uploader.upload(image ,{
+  folder: "/library"
+})
+
+const userDoc = await User.findById(decoded.Id).select("password")
+
+const book = await  Book.create({
+
+  image: imageResponse.secure_url,
+  title,
+  subtitle,
+  author,
+  link,
+  review,
+  user: userDoc,
+})
+
+return res.status(200).json({book, message: "Book added successfully"})
+  
 } catch (error) {
+  res.status(400).json({message:error.message})
   
 }
 
