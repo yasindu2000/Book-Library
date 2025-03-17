@@ -19,7 +19,7 @@ const Bookpage = () => {
     return <p>Loading...</p>;
   }
 
-  console.log("Book: ", book);
+  
 
   const handleDelete = async () => {
     const { message } = await deleteBook(params.id);
@@ -52,9 +52,9 @@ const Bookpage = () => {
           <div className="flex justify-between items-center">
             <p>
               Uploaded by:{" "}
-              <span className="text-[#944424]">@{book?.user}</span>
+              <span className="text-[#944424]">@{book?.user?.username || "Unknown"}</span>
             </p>
-
+ 
             {user?._id === book?.user?._id && (
               <div className="text-2xl font-bold -mt-2 relative">
                 <span

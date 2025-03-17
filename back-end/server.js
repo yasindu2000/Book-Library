@@ -261,6 +261,100 @@ app.get("/api/fetch-book/:id", async (req, res) => {
   }
 });
 
+app.post("/api/update-book/:id", async (req, res) => {
+  const { image, title, subtitle, author, link, review } = req.body;
+  const { token } = req.cookies;
+  if (!token) {
+    return res.status(401).json({ message: "No token provided." });
+  }
+  const { id } = req.params;
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (!decoded) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+    const book = await Book.findById(id);
+
+    if (image) {
+      // Delete the previous one first
+      const parts = book.image.split("/");
+      const fileName = parts[parts.length - 1]; // Extract the last part: "ihwklaco9wt2d0kqdqrs.png"
+      const imageId = fileName.split(".")[0];
+      cloudinary.uploader
+        .destroy(`Favlib/${imageId}`)
+        .then((result) => console.log("result: ", result));
+
+      // Then upload the new one
+      const imageResponse = await cloudinary.uploader.upload(image, {
+        folder: "/Favlib",
+      });
+
+      const updatedBook = await Book.findByIdAndUpdate(id, {
+        image: imageResponse.secure_url,
+        title,
+        subtitle,
+        author,
+        link,
+        review,
+      });
+
+      return res
+        .status(200)
+        .json({ book: updatedBook, message: "Book updated successfully." });
+    }
+
+    const updatedBook = await Book.findByIdAndUpdate(id, {
+      title,
+      subtitle,
+      author,
+      link,
+      review,
+    });
+
+    return res
+      .status(200)
+      .json({ book: updatedBook, message: "Book updated successfully." });
+  } catch (error) {
+    console.log(error.message);
+    res.status(400).json({ message: error.message });
+  }
+});
+
+app.delete("/api/delete-book/:id", async (req, res) => {
+  const { id } = req.params;
+  const { token } = req.cookies;
+  if (!token) {
+    return res.status(401).json({ message: "No token provided." });
+  }
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (!decoded) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    const book = await Book.findById(id);
+
+    // Delete the image first
+    const parts = book.image.split("/");
+    const fileName = parts[parts.length - 1]; // Extract the last part: "ihwklaco9wt2d0kqdqrs.png"
+    const imageId = fileName.split(".")[0];
+    cloudinary.uploader
+      .destroy(`Favlib/${imageId}`)
+      .then((result) => console.log("result: ", result));
+
+    // Then delete from database
+    await Book.findByIdAndDelete(id);
+
+    return res.status(200).json({ message: "Book deleted successfully." });
+  } catch (error) {
+    console.log(error.message);
+    res.status(400).json({ message: error.message });
+  }
+});
+
+
 app.listen(PORT, async () => {
   await connectTODB();
   console.log(`Server running on port: ${PORT}`);

@@ -74,7 +74,7 @@ addBook: async (image, title, subtitle, author, link, review) => {
   },
 
   fetchBook: async (id) => {
-    set({ isLoading: true, error: null });
+    set({ isLoading: true, error: null, book:null });
 
     try {
       const response = await axios.get(`${API_URL}/fetch-book/${id}`);
