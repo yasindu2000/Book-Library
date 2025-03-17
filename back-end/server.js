@@ -28,7 +28,7 @@ app.use(
 
 
 console.log(process.env.PORT);
-app.use(express.json());
+app.use(express.json({limit: "20mb"}));
 app.use(cookieParser());
 
 //signup

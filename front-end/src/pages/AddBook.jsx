@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import toast from "react-hot-toast";
+import { useBookStore } from "../store/bookStore";
+import { useNavigate } from "react-router";
 
 function AddBook() {
 
@@ -9,6 +12,8 @@ const [subtitle, setSubtitle] = useState("");
 const [author, setAuthor] = useState("");
 const [link, setLink] = useState("");
 const [review, setReview] = useState("");
+const {isLoading, error, addBook } = useBookStore();
+const navigate = useNavigate();
 
 const handleImageChange = (e)=>{
 
@@ -22,11 +27,27 @@ const handleImageChange = (e)=>{
   }
 }
 
-const handleSubmit = (e) =>{
+const handleSubmit = async(e) =>{
 
   e.preventDefault();
 
-  console.log(image, title, subtitle, author, link, review);
+  if (!image || !title || !author || !link) {
+    toast.error("Please fill in required information.");
+    return;
+  }
+
+  const { message } = await addBook(
+    image,
+    title,
+    subtitle,
+    author,
+    link,
+    review,
+  );
+
+  toast.success(message);
+  navigate("/");
+  
 }
 
 
@@ -35,6 +56,7 @@ const handleSubmit = (e) =>{
       <h2 className="text-center font-semibold pt-8 md:text-2xl w-full mx-auto underline">
         Add Book to Library
       </h2>
+     
 
       <form
         onSubmit={handleSubmit}
@@ -108,13 +130,13 @@ const handleSubmit = (e) =>{
           />
         </div>
 
-        {/* {error && <p className="text-red-500">{error}</p>} */}
+        {error && <p className="text-red-500">{error}</p>}
         <button
           type="submit"
-          // disabled={isLoading}
+          disabled={isLoading}
           className="w-full bg-[#403D39] text-[#FFFCF2] px-3 py-2 rounded-lg font-semibold"
         >
-          Add book
+           {isLoading ? "Please wait..." : "Add Book"}
         </button>
 
       </form>
