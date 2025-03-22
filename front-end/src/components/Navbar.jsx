@@ -35,7 +35,7 @@ function Navbar() {
           <Link to={"/add-book"}>
             <button className="cursor-pointer" >Add book</button>
           </Link>
-          <button className="bg-[#403D39] px-3 py-2 cursor-pointer" onClick={handleLogout}>Log out{user.username}</button>
+          <button className="bg-[#403D39] px-3 py-2 cursor-pointer " onClick={handleLogout}>Log out {user.username}</button>
         </div>
       )}
     </nav>

@@ -13,7 +13,7 @@ const Bookpage = () => {
 
   useEffect(() => {
     fetchBook(params.id);
-  }, [fetchBook, params]);
+  }, [fetchBook, params.id]);
 
   if (isLoading) {
     return <p>Loading...</p>;
